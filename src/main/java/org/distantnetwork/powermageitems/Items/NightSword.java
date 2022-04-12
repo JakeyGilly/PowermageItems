@@ -1,0 +1,111 @@
+package org.distantnetwork.powermageitems.Items;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.distantnetwork.powermagecore.utils.Items.WeaponItem;
+import org.distantnetwork.powermagecore.utils.Rarity;
+
+import java.util.Arrays;
+import java.util.HashMap;
+
+public class NightSword extends WeaponItem {
+    public NightSword() {
+        super(
+                Material.IRON_SWORD,
+                1,
+                String.format("%sNight Sword", ChatColor.LIGHT_PURPLE),
+                Arrays.asList(
+                        String.format("%sAbility: Moonlight %sPASSIVE", ChatColor.GOLD, ChatColor.YELLOW),
+                        String.format("%sDeals %s33%% %smore damage during the night.", ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY)
+                ),
+                Arrays.asList(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS),
+                new HashMap<Enchantment, Integer>() {{ put(Enchantment.MENDING, 1); }},
+                0,
+                true,
+                Rarity.EPIC,
+                6,
+                50,
+                true
+        );
+    }
+
+    @Override
+    public void onEquip(Player player) {
+
+    }
+
+    @Override
+    public void onUnequip(Player player) {
+
+    }
+
+    @Override
+    public void clickEntity(Player player, Entity entity, boolean b) {
+
+    }
+
+    @Override
+    public void punchEntity(Player player, Entity entity, double v, boolean b) {
+        //TODO: Check if this works
+        if (!(player.getWorld().getTime() > 0 && player.getWorld().getTime() < 12300)) {
+            setDamage(9);
+        } else {
+            setDamage(6);
+        }
+    }
+
+    @Override
+    public void leftClickOnBlock(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void leftClickOnAir(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void rightClickOnBlock(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void rightClickOnAir(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void onBlockBreak(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void onBlockPlace(Player player, Block block, boolean b) {
+
+    }
+
+    @Override
+    public void onDrop(Player player) {
+
+    }
+
+    @Override
+    public void onPickup(Player player) {
+
+    }
+
+    @Override
+    public void onCaughtFish(Player player, Entity entity) {
+
+    }
+
+    @Override
+    public void onShootBow(Player player, Entity entity) {
+
+    }
+}

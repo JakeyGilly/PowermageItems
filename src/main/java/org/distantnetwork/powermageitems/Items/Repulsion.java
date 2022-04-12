@@ -67,9 +67,9 @@ public class Repulsion extends WeaponItem {
                     if (target == player) continue;
                 }
                 entity.setVelocity(new Vector(
-                        entity.getLocation().add(0, 1, 0).getX() - player.getEyeLocation().getX(),
+                        entity.getLocation().getX() - player.getEyeLocation().getX(),
                         entity.getLocation().add(0, 1, 0).getY() - player.getEyeLocation().getY(),
-                        entity.getLocation().add(0, 1, 0).getZ() - player.getEyeLocation().getZ()
+                        entity.getLocation().getZ() - player.getEyeLocation().getZ()
                 ).normalize().multiply(1.5D).setY(1.0D));
                 entity.sendMessage(String.format("%sYou were launched away by %s%s%s.", ChatColor.GRAY, ChatColor.BLUE, player.getName(), ChatColor.GRAY));
             }
@@ -112,6 +112,16 @@ public class Repulsion extends WeaponItem {
 
     @Override
     public void onPickup(Player player) {
+
+    }
+
+    @Override
+    public void onCaughtFish(Player player, Entity entity) {
+
+    }
+
+    @Override
+    public void onShootBow(Player player, Entity entity) {
 
     }
 }

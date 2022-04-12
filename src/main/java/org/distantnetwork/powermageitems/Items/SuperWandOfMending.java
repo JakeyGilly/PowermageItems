@@ -7,7 +7,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.util.Vector;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.distantnetwork.powermagecore.utils.Items.WeaponItem;
 import org.distantnetwork.powermagecore.utils.PowermagePlayer;
 import org.distantnetwork.powermagecore.utils.Rarity;
@@ -15,24 +16,24 @@ import org.distantnetwork.powermagecore.utils.Rarity;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class SuperRepulsion extends WeaponItem {
-    public SuperRepulsion() {
+public class SuperWandOfMending extends WeaponItem {
+    public SuperWandOfMending() {
         super(
-                Material.SCUTE,
+                Material.BLAZE_ROD,
                 1,
-                String.format("%sRepulsion", ChatColor.BLUE),
+                String.format("%sSuper Wand of Mending", ChatColor.BLUE),
                 Arrays.asList(
-                        String.format("%sAbility: Launch Away %sRIGHT CLICK", ChatColor.GOLD, ChatColor.YELLOW),
-                        String.format("%sLaunches everyone within a %s5 block %sradius away.", ChatColor.GREEN, ChatColor.GRAY, ChatColor.GRAY),
-                        String.format("%sMana Cost: %s20", ChatColor.DARK_GRAY, ChatColor.LIGHT_PURPLE)
+                        String.format("%sAbility: Super Heal %sRIGHT CLICK", ChatColor.GOLD, ChatColor.YELLOW),
+                        String.format("%sHeals %s2 ❤%s, but inflicts you with %sWeakness %sfor 3 second.", ChatColor.GRAY, ChatColor.RED, ChatColor.GRAY, ChatColor.GRAY, ChatColor.BLUE, ChatColor.GRAY),
+                        String.format("%sMana Cost: %s60", ChatColor.DARK_GRAY, ChatColor.LIGHT_PURPLE)
                 ),
                 Arrays.asList(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS),
-                new HashMap<Enchantment, Integer>() {{put(Enchantment.MENDING, 1);}},
+                new HashMap<Enchantment, Integer>() {{ put(Enchantment.MENDING, 1); }},
                 0,
                 true,
                 Rarity.RARE,
-                0,
-                50,
+                4,
+                35,
                 true
         );
     }
@@ -60,24 +61,11 @@ public class SuperRepulsion extends WeaponItem {
     @Override
     public void leftClickOnBlock(Player player, Block block, boolean b) {
         PowermagePlayer pmPlayer = new PowermagePlayer(player);
-        if (pmPlayer.getMana() >= 20) {
-            for (Entity entity : player.getNearbyEntities(2.5, 2.5, 2.5)) {
-                if (entity instanceof Player) {
-                    Player target = (Player) entity;
-                    if (target == player) continue;
-                }
-                entity.setVelocity(new Vector(
-                        entity.getLocation().getX() - player.getEyeLocation().getX(),
-                        entity.getLocation().add(0, 1, 0).getY() - player.getEyeLocation().getY(),
-                        entity.getLocation().getZ() - player.getEyeLocation().getZ()
-                ).normalize().multiply(3D).setY(1.0D));
-                entity.sendMessage(String.format("%sYou were launched away by %s%s%s.", ChatColor.GRAY, ChatColor.BLUE, player.getName(), ChatColor.GRAY));
-            }
-            player.sendMessage(String.format("%sUsed %sBounce%s! %s(20 Mana)", ChatColor.GREEN, ChatColor.GOLD, ChatColor.GREEN, ChatColor.LIGHT_PURPLE));
-            pmPlayer.setMana(pmPlayer.getMana() - 20);
-            pmPlayer.save();
-            player.getItemInUse().setAmount(0);
-        } else player.sendMessage(String.format("%sYou do not have enough mana to use this ability.", ChatColor.RED));
+        if (pmPlayer.getMana() >= 60) {
+            pmPlayer.setMana(pmPlayer.getMana() - 60);
+            player.setHealth(player.getHealth() + 2);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 3, 1));
+        } else player.sendMessage(String.format("%sYou don't have enough mana!", ChatColor.RED));
     }
 
     @Override
@@ -92,7 +80,7 @@ public class SuperRepulsion extends WeaponItem {
 
     @Override
     public void rightClickOnAir(Player player, Block block, boolean b) {
-        leftClickOnAir(player, block, b);
+        rightClickOnBlock(player, block, b);
     }
 
     @Override

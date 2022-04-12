@@ -7,7 +7,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.util.Vector;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.distantnetwork.powermagecore.utils.ConfigurationManager;
 import org.distantnetwork.powermagecore.utils.Items.WeaponItem;
 import org.distantnetwork.powermagecore.utils.PowermagePlayer;
 import org.distantnetwork.powermagecore.utils.Rarity;
@@ -15,24 +16,26 @@ import org.distantnetwork.powermagecore.utils.Rarity;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class SuperRepulsion extends WeaponItem {
-    public SuperRepulsion() {
+import static org.distantnetwork.powermagecore.PowermageCore.getPlugin;
+
+public class Dasher extends WeaponItem {
+    public Dasher() {
         super(
-                Material.SCUTE,
+                Material.GOLDEN_SWORD,
                 1,
-                String.format("%sRepulsion", ChatColor.BLUE),
+                String.format("%sDasher", ChatColor.WHITE),
                 Arrays.asList(
-                        String.format("%sAbility: Launch Away %sRIGHT CLICK", ChatColor.GOLD, ChatColor.YELLOW),
-                        String.format("%sLaunches everyone within a %s5 block %sradius away.", ChatColor.GREEN, ChatColor.GRAY, ChatColor.GRAY),
-                        String.format("%sMana Cost: %s20", ChatColor.DARK_GRAY, ChatColor.LIGHT_PURPLE)
+                        String.format("%sAbility: Speed %sRIGHT CLICK", ChatColor.GOLD, ChatColor.YELLOW),
+                        String.format("%sGives you %s+30%% speed %sfor %s30 seconds.", ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY, ChatColor.GREEN),
+                        String.format("%sMana Cost: %s50", ChatColor.DARK_GRAY, ChatColor.LIGHT_PURPLE)
                 ),
                 Arrays.asList(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS),
-                new HashMap<Enchantment, Integer>() {{put(Enchantment.MENDING, 1);}},
+                new HashMap<Enchantment, Integer>() {{ put(Enchantment.MENDING, 1); }},
                 0,
                 true,
-                Rarity.RARE,
-                0,
-                50,
+                Rarity.COMMON,
+                4,
+                25,
                 true
         );
     }
@@ -60,24 +63,17 @@ public class SuperRepulsion extends WeaponItem {
     @Override
     public void leftClickOnBlock(Player player, Block block, boolean b) {
         PowermagePlayer pmPlayer = new PowermagePlayer(player);
-        if (pmPlayer.getMana() >= 20) {
-            for (Entity entity : player.getNearbyEntities(2.5, 2.5, 2.5)) {
-                if (entity instanceof Player) {
-                    Player target = (Player) entity;
-                    if (target == player) continue;
+        if (pmPlayer.getMana() >= 50) {
+            player.setWalkSpeed((float) (player.getWalkSpeed() + (pmPlayer.getSpeedUpgrade() * ConfigurationManager.getDefaultConfig().getDouble("upgrades.speed.speedPerLevel")))+0.06f);
+            pmPlayer.setMana(pmPlayer.getMana() - 50);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setWalkSpeed((float) (player.getWalkSpeed() - (pmPlayer.getSpeedUpgrade() * ConfigurationManager.getDefaultConfig().getDouble("upgrades.speed.speedPerLevel"))));
                 }
-                entity.setVelocity(new Vector(
-                        entity.getLocation().getX() - player.getEyeLocation().getX(),
-                        entity.getLocation().add(0, 1, 0).getY() - player.getEyeLocation().getY(),
-                        entity.getLocation().getZ() - player.getEyeLocation().getZ()
-                ).normalize().multiply(3D).setY(1.0D));
-                entity.sendMessage(String.format("%sYou were launched away by %s%s%s.", ChatColor.GRAY, ChatColor.BLUE, player.getName(), ChatColor.GRAY));
-            }
-            player.sendMessage(String.format("%sUsed %sBounce%s! %s(20 Mana)", ChatColor.GREEN, ChatColor.GOLD, ChatColor.GREEN, ChatColor.LIGHT_PURPLE));
-            pmPlayer.setMana(pmPlayer.getMana() - 20);
-            pmPlayer.save();
-            player.getItemInUse().setAmount(0);
-        } else player.sendMessage(String.format("%sYou do not have enough mana to use this ability.", ChatColor.RED));
+            }.runTaskLater(getPlugin(), 600);
+
+        }
     }
 
     @Override
@@ -92,7 +88,7 @@ public class SuperRepulsion extends WeaponItem {
 
     @Override
     public void rightClickOnAir(Player player, Block block, boolean b) {
-        leftClickOnAir(player, block, b);
+        rightClickOnBlock(player, block, b);
     }
 
     @Override

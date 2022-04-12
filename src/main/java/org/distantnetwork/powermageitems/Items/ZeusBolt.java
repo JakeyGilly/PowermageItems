@@ -130,6 +130,16 @@ public class ZeusBolt extends WeaponItem implements Listener {
 
     }
 
+    @Override
+    public void onCaughtFish(Player player, Entity entity) {
+
+    }
+
+    @Override
+    public void onShootBow(Player player, Entity entity) {
+
+    }
+
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
