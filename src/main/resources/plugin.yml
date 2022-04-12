@@ -1,0 +1,4 @@
+name: PowermageItems
+version: '${project.version}'
+main: org.distantnetwork.powermageitems.PowermageItems
+api-version: 1.18
