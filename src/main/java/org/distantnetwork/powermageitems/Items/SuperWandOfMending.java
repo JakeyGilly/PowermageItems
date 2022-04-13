@@ -63,6 +63,7 @@ public class SuperWandOfMending extends WeaponItem {
         PowermagePlayer pmPlayer = new PowermagePlayer(player);
         if (pmPlayer.getMana() >= 60) {
             pmPlayer.setMana(pmPlayer.getMana() - 60);
+            pmPlayer.save()
             player.setHealth(player.getHealth() + 2);
             player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20 * 3, 1));
         } else player.sendMessage(String.format("%sYou don't have enough mana!", ChatColor.RED));

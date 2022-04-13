@@ -16,7 +16,7 @@ import org.distantnetwork.powermagecore.utils.Rarity;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.distantnetwork.powermagecore.PowermageCore.getPlugin;
+import static org.distantnetwork.powermageitems.PowermageItems.getInstance;
 
 public class SuperDasher extends WeaponItem {
     public SuperDasher() {
@@ -66,14 +66,14 @@ public class SuperDasher extends WeaponItem {
         if (pmPlayer.getMana() >= 60) {
             player.setWalkSpeed((float) (player.getWalkSpeed() + (pmPlayer.getSpeedUpgrade() * ConfigurationManager.getDefaultConfig().getDouble("upgrades.speed.speedPerLevel")))+0.08f);
             pmPlayer.setMana(pmPlayer.getMana() - 60);
+            pmPlayer.save();
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    player.setWalkSpeed((float) (player.getWalkSpeed() - (pmPlayer.getSpeedUpgrade() * ConfigurationManager.getDefaultConfig().getDouble("upgrades.speed.speedPerLevel"))));
+                    player.setWalkSpeed((float) (player.getWalkSpeed() - (pmPlayer.getSpeedUpgrade() * ConfigurationManager.getDefaultConfig().getDouble("upgrades.speed.speedPerLevel")))-0.08f);
                 }
-            }.runTaskLater(getPlugin(), 800);
-
-        }
+            }.runTaskLater(getInstance(), 800);
+        } else player.sendMessage(String.format("%sYou do not have enough mana to use this ability.", ChatColor.RED));
     }
 
     @Override

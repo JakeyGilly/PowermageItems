@@ -20,7 +20,7 @@ public class SuperRepulsion extends WeaponItem {
         super(
                 Material.SCUTE,
                 1,
-                String.format("%sRepulsion", ChatColor.BLUE),
+                String.format("%sSuper Repulsion", ChatColor.BLUE),
                 Arrays.asList(
                         String.format("%sAbility: Launch Away %sRIGHT CLICK", ChatColor.GOLD, ChatColor.YELLOW),
                         String.format("%sLaunches everyone within a %s5 block %sradius away.", ChatColor.GREEN, ChatColor.GRAY, ChatColor.GRAY),
@@ -76,7 +76,11 @@ public class SuperRepulsion extends WeaponItem {
             player.sendMessage(String.format("%sUsed %sBounce%s! %s(20 Mana)", ChatColor.GREEN, ChatColor.GOLD, ChatColor.GREEN, ChatColor.LIGHT_PURPLE));
             pmPlayer.setMana(pmPlayer.getMana() - 20);
             pmPlayer.save();
-            player.getItemInUse().setAmount(0);
+            if (player.getInventory().getItemInMainHand() == this.getItem()) {
+                player.getInventory().setItemInMainHand(this.getItem());
+            } else if (player.getInventory().getItemInOffHand() == this.getItem()) {
+                player.getInventory().setItemInOffHand(this.getItem());
+            }
         } else player.sendMessage(String.format("%sYou do not have enough mana to use this ability.", ChatColor.RED));
     }
 
